@@ -29,12 +29,15 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Install Android SDK packages
+      - name: Prepare Android SDK
         run: |
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           yes | "$SDKMANAGER" --licenses > /dev/null || true
-          "$SDKMANAGER" "platform-tools" "platforms;android-37" "build-tools;37.0.0" || \
-            "$SDKMANAGER" "platform-tools" "platforms;android-37"
+          "$SDKMANAGER" "platform-tools" || true
+          "$SDKMANAGER" "platforms;android-37.2" || true
+          "$SDKMANAGER" "build-tools;37.0.0" || true
+          echo "--- 已安装的 platforms / build-tools ---"
+          ls "$ANDROID_HOME/platforms" "$ANDROID_HOME/build-tools" || true
 
       - name: Check keystore
         run: |
